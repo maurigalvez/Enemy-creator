@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\ArmorData.cs">
+    <Files>
+      <File FileName="Assets\Scripts\EntityData.cs" Line="22" Column="2" />
+      <File FileName="Assets\Scripts\WeaponData.cs" Line="15" Column="1" />
+      <File FileName="Assets\Scripts\ArmorData.cs" Line="15" Column="1" />
+      <File FileName="Assets\Scripts\EntityHealthDebug.cs" Line="143" Column="17" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
