@@ -8,27 +8,29 @@ using System.Collections;
 /// </summary>
 public class EntityHealthDebug : MonoBehaviour
 {
-	//============
+   /// =========================
 	// INSPECTOR PROPERTIES
-	//============
+   /// =========================
 	public float HealthBarWidth;			// Width of Health Bar
 	public float HealthBarHeight;			// Height of Health Bar
 	[HideInInspector]
-	public float MaxDistance = 30;			// Maximum Distance From Camera
+	public float MaxDistance = 30;		// Maximum Distance From Camera.
+   [HideInInspector]
 	public float MinDistance = 3;			// Minumum Distance From Camera
+   [HideInInspector]
 	public float YDistance = 50;			// Y Distance of HealthBar
-	//============
+   /// =========================
 	// PRIVATE PROPERTIES
-	//============
-	private Transform entTransform;			// Instance of entity's transform
+   /// =========================
+	private Transform entTransform;		// Instance of entity's transform
 	private bool draw;						// True if entity is visible by cam.
 	private bool OutOfCamView;				// True if entity is Out of Camera Bounds
-	private Vector3 ScreenPosition;			// ScreenPosition
+	private Vector3 ScreenPosition;		// ScreenPosition
 	private Rect healthBar;					// Health Bar Rectangle
 	private EntityData eData;				// Instance of Entity Data
 	private Camera MainCamera;				// Instance of MainCamera
-	private float DistanceFromCam;			// Current Distance From Camera
-	private Transform CameraTransform;		// Instance of Camera Transform
+	private float DistanceFromCam;		// Current Distance From Camera
+	private Transform CameraTransform;	// Instance of Camera Transform
 	private GUIStyle HBStyle;				// Instance of Health GUIStyle
 	/// =========================
 	/// START
@@ -134,10 +136,6 @@ public class EntityHealthDebug : MonoBehaviour
 		// check if Entity Data was not found
 		if(!eData)
 			Debug.LogError ("Assign an Entity Data Component to " + this.gameObject.name);
-		//--------
-		// Initialize HBStyle
-		//--------
-
 	}
 	/// =========================
 	/// DRAW HEALTH
@@ -157,6 +155,5 @@ public class EntityHealthDebug : MonoBehaviour
 		GUI.color = Color.red;
 		GUI.HorizontalScrollbar(healthBar,0,eData.Health,0,eData.MaxHealthPoints);
 		GUI.color = Color.white;
-
 	}
 }
