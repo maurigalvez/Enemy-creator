@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 /// <summary>
 /// Author: Mauricio Galvez
 /// Date Created: 23/03/15
@@ -13,12 +14,12 @@ public class EntityHealthDebug : MonoBehaviour
    /// =========================
 	public float HealthBarWidth;			// Width of Health Bar
 	public float HealthBarHeight;			// Height of Health Bar
+   public float YOffset = 50;			   // Y Distance of HealthBar
+   public Texture scrollbar;           // Scrollbar to be drawn
 	[HideInInspector]
 	public float MaxDistance = 30;		// Maximum Distance From Camera.
    [HideInInspector]
 	public float MinDistance = 3;			// Minumum Distance From Camera
-   [HideInInspector]
-	public float YDistance = 50;			// Y Distance of HealthBar
    /// =========================
 	// PRIVATE PROPERTIES
    /// =========================
@@ -31,7 +32,6 @@ public class EntityHealthDebug : MonoBehaviour
 	private Camera MainCamera;				// Instance of MainCamera
 	private float DistanceFromCam;		// Current Distance From Camera
 	private Transform CameraTransform;	// Instance of Camera Transform
-	private GUIStyle HBStyle;				// Instance of Health GUIStyle
 	/// =========================
 	/// START
 	/// <summary>
@@ -135,7 +135,7 @@ public class EntityHealthDebug : MonoBehaviour
 		eData = this.gameObject.GetComponent<EntityData>();
 		// check if Entity Data was not found
 		if(!eData)
-			Debug.LogError ("Assign an Entity Data Component to " + this.gameObject.name);
+			Debug.LogError ("Assign an Entity Data Component to " + this.gameObject.name);     
 	}
 	/// =========================
 	/// DRAW HEALTH
@@ -150,10 +150,11 @@ public class EntityHealthDebug : MonoBehaviour
 		// Invert Y Axis
 		ScreenPosition.y = Screen.height - (ScreenPosition.y + 1);
 		// Create Health Rectangle
-		healthBar = new Rect(ScreenPosition.x - 50, ScreenPosition.y - YDistance, HealthBarWidth * eData.getHealthRatio(),HealthBarHeight);
+		healthBar = new Rect(ScreenPosition.x - 50, ScreenPosition.y - YOffset, HealthBarWidth * eData.getHealthRatio(),HealthBarHeight);
 		// Draw Health Bar
 		GUI.color = Color.red;
-		GUI.HorizontalScrollbar(healthBar,0,eData.Health,0,eData.MaxHealthPoints);
+      GUI.DrawTexture(healthBar, scrollbar);
+		// Set local position
 		GUI.color = Color.white;
 	}
 }

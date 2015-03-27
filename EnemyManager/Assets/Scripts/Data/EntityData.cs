@@ -13,6 +13,7 @@ public class EntityData : MonoBehaviour
 	// EDITOR PROPERTIES
 	//=================
 	public string Name;					// Entity's name
+	public GameObject Model;			// Entity's 3D model
 	public float MaxHealthPoints;		// Entity's Max Health
 	public ArmorData Armor;				// Entity's Armor
 	public WeaponData Weapon;			// Entity's Weapon

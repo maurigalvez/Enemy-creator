@@ -46,12 +46,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ArmorData.cs" />
-     <Compile Include="Assets\Scripts\EnemyCreator.cs" />
-     <Compile Include="Assets\Scripts\EnemyGroup.cs" />
-     <Compile Include="Assets\Scripts\EntityData.cs" />
-     <Compile Include="Assets\Scripts\EntityHealthDebug.cs" />
-     <Compile Include="Assets\Scripts\WeaponData.cs" />
+     <Compile Include="Assets\Scripts\Data\ArmorData.cs" />
+     <Compile Include="Assets\Scripts\Data\EntityData.cs" />
+     <Compile Include="Assets\Scripts\Data\FormationData.cs" />
+     <Compile Include="Assets\Scripts\Data\WeaponData.cs" />
+     <Compile Include="Assets\Scripts\Debug Scripts\EntityHealthDebug.cs" />
+     <Compile Include="Assets\Scripts\Enemy Creator\EnemyCreator.cs" />
+     <Compile Include="Assets\Scripts\Enemy Creator\EnemyGroup.cs" />
+     <Compile Include="Assets\Scripts\Enemy Creator\EntityDistribution.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
