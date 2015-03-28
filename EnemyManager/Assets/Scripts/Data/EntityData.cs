@@ -7,6 +7,7 @@ using System.Collections.Generic;
 /// Last Edited: 23/03/15
 /// Entity Data - Class used to define properties for game's entities such as characters and enemies.
 /// </summary>
+[System.Serializable]
 public class EntityData : MonoBehaviour 
 {
 	//=================
