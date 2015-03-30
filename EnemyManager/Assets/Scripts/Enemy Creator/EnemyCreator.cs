@@ -8,11 +8,9 @@ using System.Collections;
 /// </summary>
 public class EnemyCreator : MonoBehaviour 
 {
+   public int NumberOfEnemies;						// Total Number of Enemies
    public EntityData[] PreSetEnemies;		 		// List of all preset enemies
    public bool DebugEnabled;			     		// True if Debug Scripts should be added to enemies, false otherwise
    public EnemyGroup Group;                  		// Enemy Group
-   public FormationData.eFormation Formation;   	// Formation that enemy group will be distributed in
-   	
-
-
+   public FormationData.eFormation Formation;   	// Formation that enemy group will be distributed in 	
 }

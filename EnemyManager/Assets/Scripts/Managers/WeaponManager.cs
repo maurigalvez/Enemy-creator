@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+[System.Serializable]
 /// <summary>
 /// Author: Mauricio Galvez
 /// Date Created: 28/03/15
@@ -9,4 +11,8 @@ using System.Collections;
 public class WeaponManager : MonoBehaviour 
 {
 	public WeaponData[] Weapons;
+	public string name;
+	public int damage;
+	public GameObject model;
+
 }
