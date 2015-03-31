@@ -51,11 +51,8 @@
      <Compile Include="Assets\Scripts\Data\FormationData.cs" />
      <Compile Include="Assets\Scripts\Data\WeaponData.cs" />
      <Compile Include="Assets\Scripts\Debug Scripts\EntityHealthDebug.cs" />
-     <Compile Include="Assets\Scripts\Enemy Creator\EnemyCreator.cs" />
      <Compile Include="Assets\Scripts\Enemy Creator\EnemyGroup.cs" />
      <Compile Include="Assets\Scripts\Enemy Creator\EntityDistribution.cs" />
-     <Compile Include="Assets\Scripts\Managers\ArmorManager.cs" />
-     <Compile Include="Assets\Scripts\Managers\WeaponManager.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

@@ -46,7 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Editor\WeaponManagerEditor.cs" />
+     <Compile Include="Assets\Editor\ArmorCreator.cs" />
+     <Compile Include="Assets\Editor\EnemyCreator.cs" />
+     <Compile Include="Assets\Editor\WeaponCreator.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

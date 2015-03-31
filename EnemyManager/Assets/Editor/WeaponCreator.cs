@@ -4,62 +4,46 @@ using UnityEditor;
 /// <summary>
 /// Author: Mauricio Galvez
 /// Date Created: 28/03/15
-/// Last Edited: 28/03/15
-/// Weapon manager editor - Custom Editor for Weapon Manager
+/// Last Edited: 30/03/15
+/// Weapon Creator - Editor Window used to create Weapons
 /// </summary>
-[CustomEditor(typeof(WeaponManager))]
-public class WeaponManagerEditor: Editor 
+public class WeaponCreator: EditorWindow
 {
-	SerializedProperty DamageProp;		// Damage serialized property
-	SerializedProperty NameProp;		// Name serialized property
-	SerializedProperty ModelProp;		// Model serialized property
-	SerializedProperty Weapons;			// Weapons serialized property
-	WeaponManager myTarget;				// Instance of WeaponManager
-	/// ====================
-	/// ON ENABLE
+	private int Damage;						// Damage Value
+	private string Name;					// Name Value
+	private GameObject Model;				// 3D Model Value
+	/// ===================
+	/// INIT
 	/// <summary>
-	/// Initializes properties
+	/// Init this instance.
 	/// </summary>
-	/// ====================
-	public void OnEnable()
+	/// ===================
+	[MenuItem ("Window/Weapon Creator")]
+	static void Init()
 	{
-		Weapons = serializedObject.FindProperty("Weapons");
-		NameProp = serializedObject.FindProperty("name");
-		DamageProp = serializedObject.FindProperty("damage");
-		ModelProp = serializedObject.FindProperty("model");
-
+		WeaponCreator window = (WeaponCreator) EditorWindow.GetWindow(typeof(WeaponCreator));
+		window.Show ();
 	}
 	/// ====================
-	/// ON INSPECTOR GUI
+	/// ON GUI
 	/// <summary>
-	/// Raises the inspector GU event.
+	/// Updates window
 	/// </summary>
 	/// ====================
-	public override void OnInspectorGUI()
+	public void OnGUI()
 	{
-		myTarget = (WeaponManager)target;
-
-		serializedObject.Update();
-		EditorGUILayout.PropertyField(Weapons, new GUIContent("Weapons Preset"));
-		// Name
-		EditorGUILayout.PropertyField(NameProp,new GUIContent("Weapon Model"));
-		// Damage
-		EditorGUILayout.IntSlider(DamageProp,0,100, new GUIContent("Damage"));
-		if (!DamageProp.hasMultipleDifferentValues)
-			ProgressBar (DamageProp.intValue / 100.0f, "Damage");
-		// 3D model
-		EditorGUILayout.PropertyField(ModelProp,new GUIContent("Weapon Model"));
-		// Apply changes to the serialized Property
-		serializedObject.ApplyModifiedProperties ();
-		//Debug.Log (DamageProp.intValue);
+		GUILayout.Label ("Create New Weapon", EditorStyles.boldLabel);
+		// Obtain Name from textfield
+		Name= EditorGUILayout.TextField("Name", Name);
+		// Obtain damage from int slider
+		Damage = EditorGUILayout.IntSlider ("Damage",Damage,0,100);
+		ProgressBar (Damage/ 100.0f, "Damage");
+		// Obtain Model from property field
+		Model = (GameObject) EditorGUILayout.ObjectField(Model, typeof(GameObject),true);
 		if(GUILayout.Button("Create Weapon"))
 		{
-			// Obtain values
-			string name = NameProp.stringValue;
-			int damage =  DamageProp.intValue;
-			GameObject model = ModelProp.objectReferenceValue as GameObject;
 			// Assign localpath
-			string LocalPath = "Assets/Weapons/"+ name + ".prefab";
+			string LocalPath = "Assets/Resources/Weapons/"+ Name + ".prefab";
 			//----------
 			// CHECK IF WEAPON ALREADY EXISTS
 			//-----------
@@ -72,11 +56,11 @@ public class WeaponManagerEditor: Editor
 			{
 				// If it exists, prompt message
 				if (EditorUtility.DisplayDialog("Are you sure?", "The prefab already exists. Do you want to overwrite it?", "Yes","No"))
-					OverrideWeapon (prefab, name, damage, model);
+					OverrideWeapon (prefab, Name, Damage, Model);
 			}
 			else
 				// Create new weapon
-				CreateNewWeapon(LocalPath,name,damage,model);
+				CreateNewWeapon(LocalPath,Name,Damage,Model);
 		}
 	}
 	/// ====================
@@ -110,6 +94,8 @@ public class WeaponManagerEditor: Editor
 	/// ====================
 	void OverrideWeapon(GameObject prefab, string name, int damage, GameObject model)
 	{
+		if(prefab != model)
+			prefab = model;
 		WeaponData weapon = prefab.GetComponent<WeaponData>();
 		if(weapon)
 		{

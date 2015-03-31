@@ -1,8 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\Desktop\Game\Assets\Resources\Scripts\Streaming\Managers\levelMgr.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Editor\EnemyCreator.cs">
     <Files>
-      <File FileName="..\..\..\Desktop\Game\Assets\Resources\Scripts\Streaming\Managers\levelMgr.cs" Line="30" Column="24" />
+      <File FileName="Assets\Editor\EnemyCreator.cs" Line="117" Column="42" />
+      <File FileName="Assets\Editor\ArmorCreator.cs" Line="53" Column="55" />
+      <File FileName="Assets\Scripts\Data\EntityData.cs" Line="12" Column="2" />
+      <File FileName="Assets\Scripts\Data\FormationData.cs" Line="6" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
