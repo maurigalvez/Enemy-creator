@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.AnimatedValues;
 /// <summary>
 /// Author: Mauricio Galvez
 /// Date Created: 24/03/15
@@ -12,21 +12,22 @@ public class EnemyCreator : EditorWindow
 {
 	//----------------------
 	// EDITOR PROPERTIES
-	//----------------------
-   private int NumberOfEnemies = 0;								// Total Number of Enemies
-   private Object[] Presets;	 								// List of all preset enemies
-   private string[] PresetList;									// List to be added to editor
-   private bool DebugEnabled = false;	     					// True if Debug Scripts should be added to enemies, false otherwise
-   private EnemyGroup Group;                  					// Enemy Group
-   public FormationData.eFormation Formation;   				// Formation that enemy group will be distributed in 	
+	//----------------------   
+	private List<EntityData> Enemies = new List<EntityData>();	// List of Enemies to be deployed
+	private string[] EnemyGroup;
+    private bool DebugEnabled = false;	     					// True if Debug Scripts should be added to enemies, false otherwise
+    private EnemyGroup Group;                  					// Enemy Group
+    private FormationData.eFormation Formation;   				// Formation that enemy group will be distributed in 	
+	private GameObject EntityDef;								// EntityDefinition
+	private GameObject Model;									// New Model for enemy
+	private bool showDetails = false;
+	private EntityData preset = null;
+	private bool presetAdded = false;
 	//---------------------
 	// ENTITY DATA PROPERTIES
 	//----------------------
 	private string Name;						    			// Name of enemy entity
 	private int HealthPoints;									// HealthPoints of enemy entity
-	//private WeaponData Weapon;									// Instance of Weapon Data
-	//private ArmorData Armor;									// Instance of Armor Data
-	AnimBool ShowCustomFields;								    // True if custom fields should be visible, false otherwise
 	//--------------
 	// WEAPON SELECTION
 	//--------------
@@ -53,14 +54,7 @@ public class EnemyCreator : EditorWindow
 		//-----------
 		EnemyCreator window = (EnemyCreator) EditorWindow.GetWindow(typeof(EnemyCreator));
 		window.Show ();
-
 	}
-
-	void OnEnable(){
-		ShowCustomFields = new AnimBool(false);
-		ShowCustomFields.valueChanged.AddListener(Repaint);
-	}
-
 	/// ====================
 	/// ON GUI
 	/// <summary>
@@ -69,21 +63,40 @@ public class EnemyCreator : EditorWindow
 	/// ====================
 	public void OnGUI()
 	{	
-		// Obtain number of Enemies
-		NumberOfEnemies = EditorGUILayout.IntSlider ("Number Of Enemies",NumberOfEnemies,0,20);
+		// Load lists
+		LoadWeapons();
+		LoadArmors ();
+		GUILayout.Label ("Enemy Def", EditorStyles.boldLabel);
+		// Obtain Model from property field
+		EntityDef = (GameObject) EditorGUILayout.ObjectField(EntityDef, typeof(GameObject),true);
+		if(EntityDef && preset && EntityDef.name != preset.gameObject.name)
+			presetAdded = false;
+		if(!presetAdded && EntityDef)
+		{
+			preset = EntityDef.GetComponent<EntityData>();
+			if(preset)
+			{
+				LoadDefValues();
+				showDetails = true;
+				presetAdded = true;		
+			}
+			else
+			{
+				presetAdded = false;	
+				showDetails = false;
+			}
+		}
 		//--------------
 		// Display Entity Data
-		//--------------
-		GUILayout.Label ("Enemy Presets", EditorStyles.boldLabel);
-		ShowCustomFields.target = EditorGUILayout.ToggleLeft("Customized Selected Preset", ShowCustomFields.target);		
-		// -------------
-		// Extra block that can be toggled on and off.
-		// -------------
-		if (EditorGUILayout.BeginFadeGroup(ShowCustomFields.faded))
+		//--------------	
+		if (showDetails == true)
 		{
-			// Load lists
-			LoadWeapons();
-			LoadArmors ();
+			GUILayout.Label ("Enemy Customization", EditorStyles.boldLabel);
+			GUILayout.BeginHorizontal();
+			GUILayout.Label ("3D Model");
+			// Obtain new Model for enemy
+			Model = (GameObject) EditorGUILayout.ObjectField(Model, typeof(GameObject),true);
+			GUILayout.EndHorizontal();
 			// Obtain name
 			Name = EditorGUILayout.TextField("Name",Name);
 			// Obtain healthpoints
@@ -93,55 +106,96 @@ public class EnemyCreator : EditorWindow
 			// Armor Drop Down
 			ArmorIndex = EditorGUILayout.Popup("Armor",ArmorIndex,ArmorList);
 			// ------------
-			// SAVE BUTTONS
+			// BUTTONS
 			// ------------
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal();	
 			// Save Changes
-			if(GUILayout.Button("Save Changes"))
+			if(GUILayout.Button("Add To Group"))
 			{
-				// Create as New Preset
+				// Add Enemies to List			
+				preset.name = Name;
+				preset.MaxHealthPoints = HealthPoints;
+				// obtain weapon component
+				GameObject weapon = (GameObject) Weapons[WeaponIndex];
+				preset.Weapon = weapon.GetComponent<WeaponData>();
+				// obtain armor component
+				GameObject armor = (GameObject) Armor[ArmorIndex];
+				preset.Armor = armor.GetComponent<ArmorData>();
+				// Add to list
+				Enemies.Add(preset);			
+				// Display pop up
+				EditorUtility.DisplayDialog("Enemy Creator", "Enemy Has been Added To Group", "Ok");
 			}
 			// Save As New Preset
 			if(GUILayout.Button("Save As New Preset"))
 			{
 				// Create as New Preset
+				EditorUtility.DisplayDialog("Enemy Creator", "New Enemy Preset has been saved!", "Ok");
 			}
+			if(GUILayout.Button ("Reset Values"))			
+				LoadDefValues ();
 			GUILayout.EndHorizontal();
 		}
 		EditorGUILayout.EndFadeGroup();
-
-		GUILayout.Label ("Deploy Enemies", EditorStyles.boldLabel);
+		//------------
+		// ENEMY GROUP
+		//------------
+		// Check if Number of Enemies is not ZERO
+		if(Enemies.Count > 0)
+		{
+			// Display enemy group
+			GUILayout.Label("Group Overview", EditorStyles.boldLabel);
+		
+		}
+		//------------
+		// DEPLOY GROUP
+		//------------
+		GUILayout.Label ("Deploy Group", EditorStyles.boldLabel);
 		// Check if Debug Scripts should be attached
 		DebugEnabled = EditorGUILayout.Toggle("Attach Debug Scripts", DebugEnabled);
 		// Display Formation
 		Formation = (FormationData.eFormation) EditorGUILayout.EnumPopup("Initial Formation", Formation);
+		if(GUILayout.Button("Deploy Group"))
+		{
+			// Display pop up
+			EditorUtility.DisplayDialog("Enemy Creator", "Enemy Group has been deployed", "Ok");
+		}
 	}
+	/// ================
+	/// SAVE AS NEW PRESET
+	/// ================
 	private void SaveAsNewPreset()
 	{
 
 	}
-
 	/// ================
-	/// LOAD PRESETS
+	/// LOAD DEF VALUES
 	/// <summary>
-	/// Loads Enemy Presets
+	/// Loads the def values.
 	/// </summary>
 	/// ================
-	private void LoadPresets()
+	private void LoadDefValues()
 	{
-		// Obtain enemy presets
-		Presets = Resources.LoadAll ("Enemies",typeof(GameObject));
-		// Initialize presetList
-		PresetList = new string[Presets.Length];
-		int e = 0;
-		// Add enemies to PresetList
-		for(int i = 0; i < Presets.Length; i++)
+		// set values from preset
+		Name = preset.name;
+		HealthPoints = (int) preset.MaxHealthPoints;
+		//-----------
+		// set weapon Index
+		//------------
+		for(int w = 0; w < WeaponList.Length; w++)
 		{
-			GameObject enemy = (GameObject)Presets[i];
-			// Check if its an enemy
-			if(enemy.GetComponent<EntityData>())
-				// Add to PresetList
-				PresetList[i++] = enemy.GetComponent<EntityData>().Name;
+			if(preset.Weapon && preset.Weapon.name == WeaponList[w])
+				// set weapon index
+				WeaponIndex = w;
+		}
+		//----------
+		// set armor index
+		//----------
+		for(int a = 0; a < ArmorList.Length; a++)
+		{
+			if(preset.Armor && preset.Armor.name == ArmorList[a])
+				// set armor index
+				ArmorIndex = a;
 		}
 	}
 	/// ================
