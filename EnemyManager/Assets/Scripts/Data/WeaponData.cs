@@ -11,4 +11,8 @@ public class WeaponData : MonoBehaviour
 {
 	public string Name;			// Name of Weapon
 	public int DamagePoints;	// Weapon's Damage Points
+   public int Noise;          // Noise of Weapon when firing
+   public int Fade;           // Fade rate of noise
+   public int Ammo;           // Weapon Ammo
+   public int Accuracy;       // Weapon Accuracy
 }

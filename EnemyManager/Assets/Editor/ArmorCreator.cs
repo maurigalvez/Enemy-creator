@@ -18,7 +18,7 @@ public class ArmorCreator : EditorWindow
 	/// Init this instance.
 	/// </summary>
 	/// ===================
-	[MenuItem ("Window/Armor Creator")]
+   [MenuItem("Create/New Armor... %#a")]
 	static void Init()
 	{
 		ArmorCreator window = (ArmorCreator) EditorWindow.GetWindow(typeof(ArmorCreator));

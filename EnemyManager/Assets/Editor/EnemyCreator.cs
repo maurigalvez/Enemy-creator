@@ -46,7 +46,7 @@ public class EnemyCreator : EditorWindow
 	/// Init this instance.
 	/// </summary>
 	/// ===================
-	[MenuItem ("Window/Enemy Creator")]
+   [MenuItem("Create/New Enemy... %#e")]
 	static void Init()
 	{
 		//-----------

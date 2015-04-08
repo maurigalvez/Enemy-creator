@@ -10,7 +10,11 @@ using UnityEditor;
 public class WeaponCreator: EditorWindow
 {
 	private int Damage;						// Damage Value
-	private string Name;					// Name Value
+	private string Name;					   // Name Value
+   private string Accuracy;            // Accuracy Value
+   private string Ammo;                // Ammo value
+   private string Noise;               // Noise Value
+   private string Fade;                // Fade Value
 	private GameObject Model;				// 3D Model Value
 	/// ===================
 	/// INIT
@@ -18,7 +22,7 @@ public class WeaponCreator: EditorWindow
 	/// Init this instance.
 	/// </summary>
 	/// ===================
-	[MenuItem ("Window/Weapon Creator")]
+   [MenuItem("Create/New Weapon... %#w")]
 	static void Init()
 	{
 		WeaponCreator window = (WeaponCreator) EditorWindow.GetWindow(typeof(WeaponCreator));
