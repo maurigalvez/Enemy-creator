@@ -9,13 +9,27 @@ using UnityEditor;
 /// </summary>
 public class WeaponCreator: EditorWindow
 {
-	private int Damage;						// Damage Value
-	private string Name;					   // Name Value
-   private string Accuracy;            // Accuracy Value
-   private string Ammo;                // Ammo value
-   private string Noise;               // Noise Value
-   private string Fade;                // Fade Value
-	private GameObject Model;				// 3D Model Value
+   /// ===================
+   // WEAPON PROPERTIES
+   /// ===================
+   private int Damage;					      // Damage Value
+	private string Name;					      // Name Value
+   private int Accuracy;                  // Accuracy Value
+   private int Spread;                    // Spread Value
+   private int Ammo;                      // Ammo value
+   private int Noise;                     // Noise Value
+   private int Fade;                      // Fade Value
+	private GameObject Model;			      // 3D Model Value
+   private bool showMaxValues = false;    // True if max values should be shown, false otherwise
+   /// ===================
+   /// MAX VALUE PROPERTIES
+   /// ===================
+   private float MaxDamage = 200;
+   private float MaxAmmo = 100;
+   private float MaxAccuracy = 100;
+   private float MaxSpread = 3;
+   private float MaxNoise = 5;
+   private float MaxFade = 3;
 	/// ===================
 	/// INIT
 	/// <summary>
@@ -37,20 +51,59 @@ public class WeaponCreator: EditorWindow
 	public void OnGUI()
 	{
 		GUILayout.Label ("Create New Weapon", EditorStyles.boldLabel);
+      //----------
+      // Create foldout for max values
+      //---------
+      showMaxValues = EditorGUILayout.Foldout(showMaxValues, "Edit Properties Values");
+      if(showMaxValues)
+      {
+         MaxAmmo = EditorGUILayout.FloatField("Max Ammo", MaxAmmo);
+         MaxDamage = EditorGUILayout.FloatField("Max Damage", MaxDamage);
+         MaxAccuracy = EditorGUILayout.FloatField("Max Accuracy", MaxAccuracy);
+         MaxSpread = EditorGUILayout.FloatField("Max Spread", MaxSpread);
+         MaxNoise = EditorGUILayout.FloatField("Max Noise", MaxNoise);
+         MaxFade = EditorGUILayout.FloatField("Max Fade", MaxFade);
+      }
+      //----------
+      // Create Weapon
+      //----------
+      // Obtain Model from property field
+      GUILayout.BeginHorizontal();
+      GUILayout.Label("3D Model");
+      Model = (GameObject)EditorGUILayout.ObjectField(Model, typeof(GameObject), true);
+      GUILayout.EndHorizontal();
 		// Obtain Name from textfield
 		Name= EditorGUILayout.TextField("Name", Name);
+      // Obtain Ammofrom int slider
+      Ammo = EditorGUILayout.IntSlider("Ammo", Ammo, 0, (int)MaxAmmo);
+      ProgressBar(Ammo / MaxAmmo, "Ammo");
 		// Obtain damage from int slider
-		Damage = EditorGUILayout.IntSlider ("Damage",Damage,0,100);
-		ProgressBar (Damage/ 100.0f, "Damage");
-		// Obtain Model from property field
-		Model = (GameObject) EditorGUILayout.ObjectField(Model, typeof(GameObject),true);
+		Damage = EditorGUILayout.IntSlider ("Damage",Damage,0,(int)MaxDamage);
+		ProgressBar (Damage/ MaxDamage, "Damage");
+      // Obtain Accuracy from int slider
+      Accuracy = EditorGUILayout.IntSlider("Accuracy", Accuracy, 0, (int)MaxAccuracy);
+      ProgressBar(Accuracy / MaxAccuracy, "Accuracy");
+      // Obtain Noise from int slider
+      Noise = EditorGUILayout.IntSlider("Noise", Noise, 0, (int)MaxNoise);
+      ProgressBar(Noise / MaxNoise, "Noise");
+      // Obtain Fade from int slider
+      Fade = EditorGUILayout.IntSlider("Fade", Fade, 0, (int)MaxFade);
+      ProgressBar(Fade / MaxFade, "Fade");
+      // Obtain Spread from int slider
+      Spread = EditorGUILayout.IntSlider("Spread", Spread, 0, (int)MaxSpread);
+      ProgressBar(Spread / MaxSpread, "Spread");	
 		if(GUILayout.Button("Create Weapon"))
 		{
+         if (!Model)
+         {
+            EditorUtility.DisplayDialog("Not Model Provided", "You must provide a 3D model to create a weapon!", "Ok");
+            return;
+         }
 			// Assign localpath
 			string LocalPath = "Assets/Resources/Weapons/"+ Name + ".prefab";
-			//----------
+			//-------------
 			// CHECK IF WEAPON ALREADY EXISTS
-			//-----------
+			//-------------
 			// create instance of game object
 			GameObject prefab = null;
 			// invoke prefab as a gameobject
@@ -60,11 +113,11 @@ public class WeaponCreator: EditorWindow
 			{
 				// If it exists, prompt message
 				if (EditorUtility.DisplayDialog("Are you sure?", "The prefab already exists. Do you want to overwrite it?", "Yes","No"))
-					OverrideWeapon (prefab, Name, Damage, Model);
+					OverrideWeapon (prefab);
 			}
 			else
 				// Create new weapon
-				CreateNewWeapon(LocalPath,Name,Damage,Model);
+				CreateNewWeapon(LocalPath);
 		}
 	}
 	/// ====================
@@ -77,14 +130,19 @@ public class WeaponCreator: EditorWindow
 	/// <param name="damage">Damage. Damage of weapon</param>
 	/// <param name="model">Model. GameObject of weapon</param>
 	/// ====================
-	void CreateNewWeapon(string path, string name, int damage, GameObject model)
+	void CreateNewWeapon(string path)
 	{	
-		// Add WeaponData to gameObject		/
-		WeaponData weapon =	model.AddComponent<WeaponData>();	
-		weapon.Name = name;
-		weapon.DamagePoints = damage;
+		// Add WeaponData to gameObject		
+		WeaponData weapon =	Model.AddComponent<WeaponData>();	
+		weapon.Name = Name;
+		weapon.DamagePoints = Damage;
+      weapon.Ammo = Ammo;
+      weapon.Accuracy = Accuracy;
+      weapon.Spread = Spread;
+      weapon.Noise = Noise;
+      weapon.Fade = Fade;
 		// Create an Empty Prefab
-		Object prefab = PrefabUtility.CreatePrefab(path,model);	
+		Object prefab = PrefabUtility.CreatePrefab(path,Model);	
 	}
 	/// ====================
 	/// OVERRIDE WEAPON
@@ -96,15 +154,20 @@ public class WeaponCreator: EditorWindow
 	/// <param name="damage">Damage. New Damage value</param>
 	/// <param name="model">Model. New Model</param>
 	/// ====================
-	void OverrideWeapon(GameObject prefab, string name, int damage, GameObject model)
+	void OverrideWeapon(GameObject prefab)
 	{
-		if(prefab != model)
-			prefab = model;
+		if(prefab != Model)
+			prefab = Model;
 		WeaponData weapon = prefab.GetComponent<WeaponData>();
 		if(weapon)
 		{
-			weapon.Name = name;
-			weapon.DamagePoints = damage;
+			weapon.Name = Name;
+			weapon.DamagePoints = Damage;
+         weapon.Ammo = Ammo;
+         weapon.Accuracy = Accuracy;
+         weapon.Spread = Spread;
+         weapon.Noise = Noise;
+         weapon.Fade = Fade;
 		}
 	}
 	// ====================

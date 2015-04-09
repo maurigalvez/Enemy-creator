@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// Enemy Group - Class used to Group multiple Enemies
 /// </summary>
 [System.Serializable]
-public class EnemyGroup : MonoBehaviour
+public class EnemyGroupData : MonoBehaviour
 {
    //===============
    // PROPERTIES

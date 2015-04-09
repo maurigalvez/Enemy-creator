@@ -33,15 +33,25 @@ public class ArmorCreator : EditorWindow
 	public void OnGUI()
 	{
 		GUILayout.Label ("Create New Armor", EditorStyles.boldLabel);
+      // Obtain Model from property field
+      GUILayout.BeginHorizontal();
+      GUILayout.Label("3D Model");
+      Model = (GameObject)EditorGUILayout.ObjectField(Model, typeof(GameObject), true);
+      GUILayout.EndHorizontal();
 		// Obtain Name from textfield
 		Name= EditorGUILayout.TextField("Name", Name);
 		// Obtain damage from int slider
 		Defense = EditorGUILayout.IntSlider ("Defense",Defense,0,100);
 		ProgressBar (Defense/ 100.0f, "Defense");
-		// Obtain Model from property field
-		Model = (GameObject) EditorGUILayout.ObjectField(Model, typeof(GameObject),true);
+      // Check if Create Armor weapon has been pressed
 		if(GUILayout.Button("Create Armor"))
 		{
+         // check if a model has not been provided
+         if (!Model)
+         {
+            EditorUtility.DisplayDialog("Not Model Provided", "You must provide a 3D model to create an armor!", "Ok");
+            return;
+         }
 			// Assign localpath
 			string LocalPath = "Assets/Resources/Armor/"+ Name + ".prefab";
 			//----------
@@ -61,7 +71,7 @@ public class ArmorCreator : EditorWindow
 			else
 				// Create new weapon
 				CreateNewArmor(LocalPath);
-		}
+		}     
 	}
 	/// ====================
 	/// CREATE NEW ARMOR

@@ -5,10 +5,10 @@ public class FormationData : MonoBehaviour
 {
 	public enum eFormation
 	{
-		DIAMOND = 0,
-		TRIANGLE = 1,
-		RECTANGLE = 2,
+		CIRCLE = 0,   
+		RECTANGLE = 1,      
 	}
 
 	public FormationData.eFormation data;
+  
 }

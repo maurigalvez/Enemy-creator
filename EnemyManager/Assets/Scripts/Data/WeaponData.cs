@@ -15,4 +15,5 @@ public class WeaponData : MonoBehaviour
    public int Fade;           // Fade rate of noise
    public int Ammo;           // Weapon Ammo
    public int Accuracy;       // Weapon Accuracy
+   public int Spread;
 }
