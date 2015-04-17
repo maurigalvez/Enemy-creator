@@ -14,7 +14,7 @@ public class EntityHealthDebug : MonoBehaviour
    /// =========================
 	public float HealthBarWidth;			// Width of Health Bar
 	public float HealthBarHeight;			// Height of Health Bar
-   public float YOffset = 50;			   // Y Distance of HealthBar
+   public Vector2 Offset;		    	   // Y Distance of HealthBar
    public Texture scrollbar;           // Scrollbar to be drawn
 	[HideInInspector]
 	public float MaxDistance = 30;		// Maximum Distance From Camera.
@@ -150,7 +150,7 @@ public class EntityHealthDebug : MonoBehaviour
 		// Invert Y Axis
 		ScreenPosition.y = Screen.height - (ScreenPosition.y + 1);
 		// Create Health Rectangle
-		healthBar = new Rect(ScreenPosition.x - 50, ScreenPosition.y - YOffset, HealthBarWidth * eData.getHealthRatio(),HealthBarHeight);
+		healthBar = new Rect(ScreenPosition.x + Offset.x, ScreenPosition.y + Offset.y, HealthBarWidth * eData.getHealthRatio(),HealthBarHeight);
 		// Draw Health Bar
 		GUI.color = Color.red;
       GUI.DrawTexture(healthBar, scrollbar);

@@ -1,0 +1,115 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+public class WanderState : BaseState
+{
+   /// ===================
+   /// PROPERTIES
+   /// ===================
+   public float WanderRadius;           // Radius from which entity will wander
+   public Transform player;             // Instance of player
+   public float RangeOfSight;           // RangeOfsight of entity
+   public BaseState PlayerSpotted;      // State to go when entity sees player 
+   private Transform eTransform;        // Instance of entity's transform
+   private Animator animator;           // Instance of Animator
+   public Vector3 target;               // Current Target position
+   private float minDistance = 1;       // Minumum distance between target
+   public List<IsWaypoint> targets;     // List of targets to wander at
+   /// ===================
+   /// ENTER
+   /// <summary>
+   /// Enters this state
+   /// </summary>
+   /// ===================
+   public override void Enter(FSM fsmComp)
+   {
+      base.Enter(fsmComp);
+      // Obtain transform
+      if (!eTransform)
+         eTransform = this.transform;
+      // Obtain animator
+      if (!animator)
+         animator = GetComponent<Animator>();
+      // Obtain list of targets
+      targets = new List<IsWaypoint>(GameObject.FindObjectsOfType<IsWaypoint>());
+      // set target
+      StartCoroutine(SetNewDestination());
+   }
+   /// ===================
+   /// EXECUTE
+   /// <summary>
+   /// Execute this state
+   /// </summary>
+   /// ===================
+   public override void Execute()
+   {
+      base.Execute();
+      //--------------
+      // IS PLAYER SEEN
+      //--------------
+      // Check if player is seen
+      if(IsPlayerSeen())
+         // go to new state
+         fsmComponent.ChangeState(PlayerSpotted);
+      // -------------
+      // DESTINATIONS
+      // -------------
+      // check distance between position and target
+      float distance = (target - eTransform.position).magnitude;
+      // check if distance < minDistance
+      if (distance < minDistance)
+         // set a new Destination 
+         StartCoroutine(SetNewDestination());
+	  if(path.status == NavMeshPathStatus.PathPartial)
+		   // set a new Destination 
+		   StartCoroutine(SetNewDestination());
+   }
+   /// ===================
+   /// SET NEW DESTINATION
+   /// <summary>
+   /// Sets a new path Destination
+   /// </summary>
+   /// ===================
+   IEnumerator SetNewDestination()
+   {
+      // Obtain new position
+      target = targets[Random.Range(0, targets.Count)].gameObject.transform.position;
+      // Obtain new destination
+      agent.SetDestination(target);
+      // calculate path
+      NavMesh.CalculatePath(eTransform.position, target, -1, path);	 
+      // Go to walking state
+      state.setState(PlayerStateData.ePlayerState.WALKING);
+      yield return null;
+   }
+   /// ===================
+   /// IS PLAYER SEEN
+   /// <summary>
+   /// Checks whether player is seen by entity or not
+   /// </summary>
+   /// <returns>True if player has been spotted, false otherwise.</returns>
+   /// ===================
+   public bool IsPlayerSeen()
+   {
+      // obtain distance from entity to player
+      float distance = (eTransform.position - player.position).magnitude;
+      // Check if player is within RangeOfSight
+      if(distance <= RangeOfSight)
+      { 
+         //------------
+         // Check if entity can see player
+         //------------
+         Vector3 difference = player.position - eTransform.position;
+         // obtain dot product
+         float dotProduct = Vector3.Dot(eTransform.forward, difference);
+         // Check if player is in front
+         if(dotProduct > 0)
+         {
+            // Player is in front of entity - Go chase him DOWN
+            return true;
+         }
+      }
+      // check if its within range
+      return false;
+   }  
+}

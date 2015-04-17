@@ -15,6 +15,8 @@ public class WeaponCreator: EditorWindow
    private int Damage;					      // Damage Value
 	private string Name;					      // Name Value
    private int Accuracy;                  // Accuracy Value
+   public int FireRate;                   // Weapon's Fire Rate
+   public int BulletCount;                // Amount of bullets weapons fires per shot
    private int Spread;                    // Spread Value
    private int Ammo;                      // Ammo value
    private int Noise;                     // Noise Value
@@ -25,9 +27,11 @@ public class WeaponCreator: EditorWindow
    /// MAX VALUE PROPERTIES
    /// ===================
    private float MaxDamage = 200;
+   private float MaxFireRate = 10;
+   private float MaxBulletCount = 3;
    private float MaxAmmo = 100;
    private float MaxAccuracy = 100;
-   private float MaxSpread = 3;
+   private float MaxSpread = 60;
    private float MaxNoise = 5;
    private float MaxFade = 3;
 	/// ===================
@@ -58,6 +62,8 @@ public class WeaponCreator: EditorWindow
       if(showMaxValues)
       {
          MaxAmmo = EditorGUILayout.FloatField("Max Ammo", MaxAmmo);
+         MaxFireRate = EditorGUILayout.FloatField("Max Fire Rate", MaxFireRate);
+         MaxBulletCount = EditorGUILayout.FloatField("Max Bullet Count", MaxBulletCount);
          MaxDamage = EditorGUILayout.FloatField("Max Damage", MaxDamage);
          MaxAccuracy = EditorGUILayout.FloatField("Max Accuracy", MaxAccuracy);
          MaxSpread = EditorGUILayout.FloatField("Max Spread", MaxSpread);
@@ -74,12 +80,18 @@ public class WeaponCreator: EditorWindow
       GUILayout.EndHorizontal();
 		// Obtain Name from textfield
 		Name= EditorGUILayout.TextField("Name", Name);
-      // Obtain Ammofrom int slider
+      // Obtain Ammo from int slider
       Ammo = EditorGUILayout.IntSlider("Ammo", Ammo, 0, (int)MaxAmmo);
       ProgressBar(Ammo / MaxAmmo, "Ammo");
 		// Obtain damage from int slider
 		Damage = EditorGUILayout.IntSlider ("Damage",Damage,0,(int)MaxDamage);
 		ProgressBar (Damage/ MaxDamage, "Damage");
+      // Obtain Fire Rate
+      FireRate = EditorGUILayout.IntSlider("Fire Rate", FireRate, 0, (int)MaxFireRate);
+      ProgressBar(FireRate / MaxFireRate, "Fire Rate");
+      // Obtain bullet count
+      BulletCount = EditorGUILayout.IntSlider("Bullet Count", BulletCount, 0, (int)MaxBulletCount);
+      ProgressBar(BulletCount / MaxBulletCount, "Bullet Count");
       // Obtain Accuracy from int slider
       Accuracy = EditorGUILayout.IntSlider("Accuracy", Accuracy, 0, (int)MaxAccuracy);
       ProgressBar(Accuracy / MaxAccuracy, "Accuracy");

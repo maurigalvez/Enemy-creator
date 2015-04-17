@@ -22,6 +22,8 @@ public class EntityData : MonoBehaviour
 	//===================
 	public float Health;				// Current Health points
 	private float HealthRatio;			// Ratio between MaxHP / Health
+	private EntityStateData state;
+   private GroupData squad;
 	/// =========================
 	/// START
 	/// <summary>
@@ -34,6 +36,8 @@ public class EntityData : MonoBehaviour
 		Health = MaxHealthPoints;
 		// initialize HealthRatio
 		HealthRatio = 1.0f;
+		// obtain state
+		state = this.GetComponent<EntityStateData>();
 	}
 	/// =========================
 	/// UPDATE
@@ -44,6 +48,10 @@ public class EntityData : MonoBehaviour
 	public virtual void Update()
 	{
 		UpdateHealthRatio();
+		// check if health is zero
+		if(Health <= 0)
+			state.GoToDeadState();
+
 	}
 	/// =========================
 	/// UPDATE HEALTH RATIO
@@ -54,6 +62,8 @@ public class EntityData : MonoBehaviour
 	private void UpdateHealthRatio()
 	{
 		HealthRatio = Health / MaxHealthPoints;
+		if(HealthRatio < 0)
+			HealthRatio = 0;
 	}
 	/// =========================
 	/// GET HEALTH RATIO
@@ -72,5 +82,25 @@ public class EntityData : MonoBehaviour
    public void Reset()
    {
       Health = MaxHealthPoints;
+   }
+   public void inflictDamage(float dmg)
+   {
+		Health -= dmg;
+   }
+   /// <summary>
+   /// Sets squad of this entity to given group
+   /// </summary>
+   /// <param name="g">Squad this entity belongs to</param>
+   public void SetSquad(GroupData g)
+   {
+      squad = g;
+   }
+   /// <summary>
+   /// Returns squad of this entity
+   /// </summary>
+   /// <returns>squad of this entity</returns>
+   public GroupData GetSquad()
+   {
+      return squad;
    }
 }
