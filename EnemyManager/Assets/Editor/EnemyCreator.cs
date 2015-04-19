@@ -208,7 +208,7 @@ public class EnemyCreator : EditorWindow
                // Assign localpath
                string LocalPath = "Assets/Resources/Enemies/" + Name + ".prefab";
                //----------
-               // CHECK IF WEAPON ALREADY EXISTS
+               // CHECK IF ENEMY ALREADY EXISTS
                //-----------
                // create instance of game object
                GameObject prefab = null;
@@ -225,6 +225,9 @@ public class EnemyCreator : EditorWindow
                   // Create new enemy
                   CreateNewEnemy(LocalPath);
             }
+            // -----------
+            // RESET VALUES
+            // ------------
             if (GUILayout.Button("Reset Values"))
                LoadDefValues();
             GUILayout.EndHorizontal();
@@ -496,6 +499,8 @@ public class EnemyCreator : EditorWindow
          // obtain weapon values
          GameObject weapon = (GameObject)Weapons[WeaponIndex];
          data.Weapon = weapon.GetComponent<WeaponData>();
+         // Change Preset 
+         preset = data;
       }
       // display message
       EditorUtility.DisplayDialog("Success", data.Name + " was overriden.", "Ok");
@@ -525,6 +530,8 @@ public class EnemyCreator : EditorWindow
       data.Weapon = weapon.GetComponent<WeaponData>();
       // Create an Empty Prefab
       Object prefab = PrefabUtility.CreatePrefab(path, Model);	
+      // Change Preset 
+      preset = data;
       // display message
       EditorUtility.DisplayDialog("Success", data.Name + " was created!", "Ok");
    }
